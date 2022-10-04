@@ -6,6 +6,7 @@ router.route('/')
 .get(productController.getProducts)
 .post(productController.createProduct)
 
+router.route('/bulk-update').patch(productController.bulkUpdateProductService)
 router.route('/:id').patch(productController.updateProduct)
 
 module.exports = router;
