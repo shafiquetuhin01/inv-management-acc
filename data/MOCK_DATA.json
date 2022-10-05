@@ -1,0 +1,11 @@
+[
+    {"name":"Apple","price":160,"description":"This is a tasty fruit. Everyone likes it","quantity":12,"unit":"kg","status":"in-stock"},
+    {"name":"Orange","price":150,"description":"This is a tasty fruit. Everyone likes it","quantity":14,"unit":"kg","status":"in-stock"},
+    {"name":"Grasp","price":360,"description":"This is a tasty fruit. Everyone likes it","quantity":22,"unit":"kg","status":"out-of-stock"},
+    {"name":"Pineapple","price":60,"description":"This is a tasty fruit. Everyone likes it","quantity":12,"unit":"kg","status":"in-stock"},
+    {"name":"Guava","price":50,"description":"This is a tasty fruit. Everyone likes it","quantity":124,"unit":"kg","status":"in-stock"},
+    {"name":"Banana","price":160,"description":"This is a tasty fruit. Everyone likes it","quantity":124,"unit":"pcs","status":"out-of-stock"},
+    {"name":"Lichi","price":260,"description":"This is a tasty fruit. Everyone likes it","quantity":1233,"unit":"pcs","status":"in-stock"},
+    {"name":"Melon","price":60,"description":"This is a tasty fruit. Everyone likes it","quantity":142,"unit":"pcs","status":"out-of-stock"},
+    {"name":"Malta","price":160,"description":"This is a tasty fruit. Everyone likes it","quantity":44,"unit":"kg","status":"in-stock"}
+]

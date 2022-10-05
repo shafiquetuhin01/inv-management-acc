@@ -9,7 +9,10 @@ const {
 
 exports.getProducts = async (req, res, next) => {
   try {
-    const products = await getProductService();
+    const queryObject = {...req.query};
+    const excludeField = ['sort','page','limit']
+    excludeField.forEach(field=>delete queryObject[field])
+    const products = await getProductService(queryObject);
     res.status(200).json({
       status: "success",
       data: products,
