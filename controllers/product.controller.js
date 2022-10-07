@@ -20,7 +20,7 @@ exports.getProducts = async (req, res, next) => {
       /\b(gt|gte|lt|lte)\b/g,
       (match) => `$${match}`
     );
-    filters=JSON.parse(filterString);
+    filters = JSON.parse(filterString);
     const queries = {};
     if (req.query.sort) {
       const sortBy = req.query.sort.split(",").join(" ");
@@ -31,6 +31,13 @@ exports.getProducts = async (req, res, next) => {
       const fields = req.query.fields.split(",").join(" ");
       queries.fields = fields;
       console.log(fields);
+    }
+
+    if (req.query.page) {
+      const {page=1, limit=10} = req.query;
+      const skip = (page - 1) * parseInt(limit);
+      queries.skip = skip;
+      queries.limit = parseInt(limit);
     }
 
     const products = await getProductService(filters, queries);
