@@ -1,3 +1,4 @@
+const { json } = require("express");
 const {
   getProductService,
   createProductService,
@@ -9,23 +10,30 @@ const {
 
 exports.getProducts = async (req, res, next) => {
   try {
-    const filters = {...req.query};
-    const excludeField = ['sort','page','limit']
-    excludeField.forEach(field=>delete filters[field])
+    let filters = { ...req.query };
+    const excludeField = ["sort", "page", "limit"];
+    excludeField.forEach((field) => delete filters[field]);
 
-    const queries = {}
-    if(req.query.sort){
-      const sortBy = req.query.sort.split(',').join(' ');
+    //gt, lt, gte, lte
+    let filterString = JSON.stringify(filters);
+    filterString = filterString.replace(
+      /\b(gt|gte|lt|lte)\b/g,
+      (match) => `$${match}`
+    );
+    filters=JSON.parse(filterString);
+    const queries = {};
+    if (req.query.sort) {
+      const sortBy = req.query.sort.split(",").join(" ");
       queries.sortBy = sortBy;
       console.log(sortBy);
     }
-    if(req.query.fields){
-      const fields = req.query.fields.split(',').join(' ')
-      queries.fields = fields
+    if (req.query.fields) {
+      const fields = req.query.fields.split(",").join(" ");
+      queries.fields = fields;
       console.log(fields);
     }
 
-    const products = await getProductService(filters,queries);
+    const products = await getProductService(filters, queries);
     res.status(200).json({
       status: "success",
       data: products,
@@ -80,7 +88,7 @@ exports.bulkUpdateProductService = async (req, res, next) => {
     res.status(200).json({
       status: "success",
       message: "successfully updated all the product",
-      data: result
+      data: result,
     });
   } catch (error) {
     res.status(400).json({
@@ -96,7 +104,7 @@ exports.bulkDeleteProductService = async (req, res, next) => {
     res.status(200).json({
       status: "success",
       message: "successfully deleted all the products",
-      data: result
+      data: result,
     });
   } catch (error) {
     res.status(400).json({
@@ -108,7 +116,7 @@ exports.bulkDeleteProductService = async (req, res, next) => {
 };
 exports.deleteProductById = async (req, res, next) => {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
     const result = await deleteProductByIdService(id);
     // if(!result.deletedCount){
     //   return res.status(400).json({
@@ -119,7 +127,7 @@ exports.deleteProductById = async (req, res, next) => {
     res.status(200).json({
       status: "success",
       message: "successfully deleted the the product",
-      data: result
+      data: result,
     });
   } catch (error) {
     res.status(400).json({
