@@ -1,100 +1,81 @@
-const mongoose = require('mongoose');
-// schema design
+const mongoose = require("mongoose");
+const {ObjectId} = mongoose.Schema.Types;
 const productSchema = mongoose.Schema(
-    {
-      name: {
+  {
+    name: {
+      type: String,
+      required: [true, "Please provide a name."],
+      trim: true,
+      lowercase: true,
+      unique: [true, "Name must be unique"],
+      minLength: [3, "Name is too short"],
+      maxLength: [30, "Name is too big"],
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+
+    unit: {
+      type: String,
+      required: true,
+      enum: {
+        values: ["kg", "ltr", "pcs", "bag"],
+        message: "unit value can't be {VALUE}, must be kg/ltr/pcs/bag",
+      },
+    },
+    imageURLs: [
+      {
         type: String,
-        required: [true, "Please provide a name."],
-        trim: true,
-        unique: [true, "Name must be unique"],
-        minLength: [3, "Name is too short"],
-        maxLength: [30, "Name is too big"],
-      },
-      description: {
-        type: String,
         required: true,
-      },
-      price: {
-        type: Number,
-        required: true,
-        min: [0, "Price can't be negative"],
-      },
-      unit: {
-        type: String,
-        required: true,
-        enum: {
-          values: ["kg", "ltr", "pcs"],
-          message: "qty can't be {VALUE}",
-        },
-      },
-      quantity: {
-        type: Number,
-        required: true,
-        min: [0, "qty can't be negative"],
         validate: {
           validator: (value) => {
-            const isInteger = Number.isInteger(value);
-            if (isInteger) {
-              return true;
-            } else {
+            if (!Array.isArray(value)) {
               return false;
             }
+            let isValid = true;
+            value.forEach((url) => {
+              if (!validator.isURL(url)) {
+                isValid = false;
+              }
+            });
+            return isValid;
           },
+          message: "Please provide a valid image urls",
         },
-        message: "qty must be a number",
       },
-      status: {
+    ],
+    category: {
+      type: String,
+      requred: true,
+    },
+    brand: {
+      name: {
         type: String,
         required: true,
-        enum: {
-          values: ["in-stock", "out-of-stock", "discontinued"],
-          message: "status can't be {VALUE}",
-        },
       },
-      //   createdAt:{
-      //     time: Date,
-      //     default: Date.now
-      //   },
-      //   updatedAt:{
-      //     time: Date,
-      //     default: Date.now
-      //   },
-      // supplier:{
-      //     type: mongoose.Schema.Types.ObjectId,
-      //     ref: "Supplier"
-      // },
-      // categories:[{
-      //     name:{
-      //         type: String,
-      //         required: true
-      //     },
-      //     _id:mongoose.Schema.Types.ObjectId
-      // }]
+      id: {
+        type: ObjectId,
+        ref: "Brand",
+        required: true,
+      },
     },
-    {
-      timestamps: true,
-    }
-  );
-  
-  // mongoose miidlewares for saving data: pre/post
-  productSchema.pre("save", function (next) {
-    // this
-    if (this.quantity == 0) {
-      this.status = "out-of-stock";
-    }
-    console.log("Before data saving");
-    next();
-  });
-  // productSchema.post("save", function (doc, next) {
-  //   console.log("After data saving");
-  //   next();
-  // });
-  
-  productSchema.methods.logger = function () {
-    console.log(`data saved for ${this.name}`);
-  };
-  
-  // schema -> model -> query
-  const Product = mongoose.model("Product", productSchema);
+  },
+  {
+    timestamps: true,
+  }
+);
 
-  module.exports = Product;
+// mongoose miidlewares for saving data: pre/post
+productSchema.pre("save", function (next) {
+  // this
+  if (this.quantity == 0) {
+    this.status = "out-of-stock";
+  }
+  console.log("Before data saving");
+  next();
+});
+// schema -> model -> query
+const Product = mongoose.model("Product", productSchema);
+
+module.exports = Product;
