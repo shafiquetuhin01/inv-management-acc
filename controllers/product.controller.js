@@ -121,6 +121,7 @@ exports.bulkDeleteProductService = async (req, res, next) => {
     });
   }
 };
+
 exports.deleteProductById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -144,3 +145,11 @@ exports.deleteProductById = async (req, res, next) => {
     });
   }
 };
+
+exports.fileUpload = async (req, res) =>{
+  try {
+    res.status(200).json(req.file)
+  } catch (error) {
+    
+  }
+}
